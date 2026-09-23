@@ -15,20 +15,16 @@ function Login() {
     setError('')
 
     const { data, error } = await supabase
-      .from('usuarios')
-      .select('id_usuario, nombre, correo')
-      .eq('correo', correo)
-      .eq('contrasena', contrasena)
-      .single()
+      .rpc('verificar_login', { p_correo: correo, p_contrasena: contrasena })
 
-    if (error || !data) {
+    if (error || !data || data.length === 0) {
       setError('Correo o contraseña incorrectos')
       return
     }
 
-    iniciarSesion(data)
+    iniciarSesion(data[0])
     navigate('/lecciones')
-  }
+  }   
 
   return (
     <div className="page page--auth">

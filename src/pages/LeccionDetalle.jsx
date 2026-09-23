@@ -28,15 +28,18 @@ function LeccionDetalle() {
     cargarDatos()
   }, [id])
 
-  async function marcarComoDominada(idPalabra) {
-    await supabase.from('progreso').upsert({
+async function marcarComoDominada(idPalabra) {
+  await supabase.from('progreso').upsert(
+    {
       id_usuario: usuario.id_usuario,
       id_palabra: idPalabra,
       dominado: true,
       fecha_ultima_practica: new Date().toISOString().split('T')[0],
-    })
-    alert('¡Guardado!')
-  }
+    },
+    { onConflict: 'id_usuario,id_palabra' } 
+  )
+  alert('¡Guardado!')
+}
 
   return (
     <div className="page">
